@@ -47,14 +47,14 @@ class SyncTesting extends AnyFunSuite:
   test("Child actor spawning") {
     val testKit = BehaviorTestKit(ActorUnderTest())
     testKit.run(SpawnChild)
-    testKit.expectEffect(Effect.Spawned(child, "child"))
+    testKit.expectEffect(Effect.Spawned(child, "child")) // Posso ispezionare i figli creati
     testKit.run(SpawnChildAnonymous)
     testKit.expectEffect(Effect.SpawnedAnonymous(child))
   }
 
   test("Sending messages to another actor") {
     val testKit = BehaviorTestKit(ActorUnderTest())
-    val inbox = TestInbox[Pong.type]()
+    val inbox = TestInbox[Pong.type]() // Posso ispezionare la mailbox
     testKit.run(Ping(inbox.ref))
     inbox.expectMessage(Pong)
   }

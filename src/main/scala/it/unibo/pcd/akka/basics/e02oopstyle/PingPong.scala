@@ -41,7 +41,7 @@ object PingPongMainSimple extends App:
   *   - watching children for termination (through signals)
   */
 object PingPongMain extends App:
-  val system = ActorSystem(
+  val system = ActorSystem( // Inizializzo gli attori tramite l'attore principale guardian
     Behaviors.setup[PingPong] { ctx =>
       // Csystemhild actor creation
       val pingponger = ctx.spawn(Behaviors.setup[PingPong](ctx => new PingPonger(ctx, 5)), "ping-ponger")
@@ -53,7 +53,7 @@ object PingPongMain extends App:
           pingponger ! msg
           Behaviors.same
         }
-        .receiveSignal { case (ctx, t @ Terminated(_)) =>
+        .receiveSignal { case (ctx, t @ Terminated(_)) => // Reagisco al segnale della terminazione dei miei figli, terminandomi a mio volta, in questo caso.
           ctx.log.info("PingPonger terminated. Shutting down")
           Behaviors.stopped // Or Behaviors.same to continue
         }

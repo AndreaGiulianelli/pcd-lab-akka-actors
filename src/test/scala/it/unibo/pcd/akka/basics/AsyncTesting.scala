@@ -9,6 +9,9 @@ import it.unibo.pcd.akka.basics.e02oopstyle.*
 import it.unibo.pcd.akka.basics.e03state.GuessGame.*
 import PingPong.*
 
+// Utile anche nei test di integrazione
+// Creo un intero sistema e verifico che tutto vada bene
+// È un test di integrazione, infatti si vede che utilizza un'altra specifica di ScalaTest
 class AsyncTesting extends AnyWordSpec with Matchers with BeforeAndAfterAll:
   val testKit = ActorTestKit() // creates an actor system (one per a set of tests)
 

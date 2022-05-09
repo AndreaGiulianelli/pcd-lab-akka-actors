@@ -5,6 +5,7 @@ import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
 import Counter.*
 
 // "Actor" module definition
+// Senza stato come definito da Akka
 object Counter:
   enum Command: // APIs i.e. message that actors should received / send
     case Tick
