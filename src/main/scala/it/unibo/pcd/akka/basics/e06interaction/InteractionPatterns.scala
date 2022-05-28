@@ -28,7 +28,8 @@ object InteractionPatternsAsk extends App:
       given Scheduler = ctx.system.scheduler
       given ExecutionContext = ctx.executionContext
       val f: Future[Greeted] = greeter ? (replyTo => Greet("Bob", replyTo))
-      f.onComplete {
+      f.onComplete { // dentro qui non posso accedere al contest (per esempio per fare loggin) in quanto non è thread-safe
+            // da utilizzare solo dentro receive o setup.
         case Success(Greeted(who, from)) => println(s"$who has been greeted by ${from.path}!")
         case _ => println("No greet")
       }
@@ -46,7 +47,7 @@ object InteractionPatternsPipeToSelf extends App:
       given Timeout = 2.seconds
       given Scheduler = ctx.system.scheduler
       val f: Future[Greeted] = greeter ? (replyTo => Greet("Bob", replyTo))
-      ctx.pipeToSelf(f)(_.getOrElse(Greeted("nobody", ctx.system.ignoreRef)))
+      ctx.pipeToSelf(f)(_.getOrElse(Greeted("nobody", ctx.system.ignoreRef))) // Il greeted interno è per il caso in cui la Future fallisce
       Behaviors.receive { case (ctx, Greeted(whom, from)) =>
         ctx.log.info(s"$whom has been greeted by ${from.path.name}")
         Behaviors.stopped
@@ -76,6 +77,7 @@ object InteractionPatternsSelfMessage extends App:
 object InteractionPatternsMsgAdapter extends App:
   val system = ActorSystem(
     Behaviors.setup[String] { ctx =>
+      // Adatto questo riferimento (che gestirebbe Stringhe) a gestire interi, specificando un opportuna conversione
       val adaptedRef: ActorRef[Int] = ctx.messageAdapter[Int](i => if (i == 0) "" else i.toString)
       adaptedRef ! 130
       adaptedRef ! 0

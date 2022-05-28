@@ -6,6 +6,7 @@ import Counter.*
 
 // "Actor" module definition
 // Senza stato come definito da Akka
+// Funzionale
 object Counter:
   enum Command: // APIs i.e. message that actors should received / send
     case Tick
@@ -22,6 +23,8 @@ object Counter:
   def apply(to: Int): Behavior[Command] =
     Behaviors.setup(new Counter(_, 0, to))
 
+
+// OOP
 class Counter(context: ActorContext[Counter.Command], var from: Int, val to: Int)
     extends AbstractBehavior[Counter.Command](context):
   override def onMessage(msg: Counter.Command): Behavior[Counter.Command] = msg match {

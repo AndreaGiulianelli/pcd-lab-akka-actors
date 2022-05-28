@@ -21,7 +21,7 @@ object SupervisedActor:
 
 object SupervisionExampleRestart extends App:
   // Qui come strategia per gestire le eccezioni faccio ripartire l'attore.
-  // Lui gestisce foo bar poi faillisce, grazie alla gestione in restart, l'attore viene restartato
+  // Lui gestisce foo bar poi fail fallisce, grazie alla gestione in restart, l'attore viene restartato
   // e continua da !!!, però in tal caso perdo lo stato (per mantenerlo basta specificare resume invece di restart), poi
   // riceverà di nuovo fail, fallirà, verrà restartato e poi riceve quit e termina gracefully.
   val system = ActorSystem[String](SupervisedActor(SupervisorStrategy.restart), "supervision")
@@ -52,7 +52,7 @@ object SupervisionExampleParent extends App:
   )
   for (cmd <- List("foo", "bar", "fail", "!!!", "fail", "quit")) system ! cmd
 
-// Se invece il parent fa il watch, non avendo gestito l'eccezione allora si stopperà anche lui
+// Se invece il parent fa il watch, non avendo gestito l'eccezione allora si stopperà anche lui, morirà assieme al figlio
 object SupervisionExampleParentWatching extends App:
   val system = ActorSystem(
     Behaviors.setup[String] { ctx =>

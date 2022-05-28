@@ -50,7 +50,7 @@ object PingPongMain extends App:
       ctx.log.info(s"I am the root user guardian. My path is: ${ctx.self.path}")
       Behaviors
         .receiveMessage[PingPong] { msg =>
-          pingponger ! msg
+          pingponger ! msg // Quando l'attore guardian riceve un messaggio lo reindirizza all'attore figlio
           Behaviors.same
         }
         .receiveSignal { case (ctx, t @ Terminated(_)) => // Reagisco al segnale della terminazione dei miei figli, terminandomi a mio volta, in questo caso.
